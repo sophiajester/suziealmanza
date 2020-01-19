@@ -1,0 +1,15 @@
+- var data = [
+- 	{ slist: '#83b7cb, #0e8aa6', text: 'Download now', icon: '💾' }, 
+- 	{ slist: '#eaebf1, #b1b7c9', text: 'Add to cart', icon: '🛒', invert: 1 }, 
+- 	{ slist: '#e7745c, #c61619', text: 'Search', icon: '🔎' }, 
+- 	{ slist: '#0f927f, #086755', text: 'Newsletter', icon: '✉️' }, 
+- 	{ slist: '#c8679e, #a2167f', text: 'Save to disk' }, 
+- 	{ slist: '#55cbfa, #058dd2', text: 'Setting' }, 
+- 	{ slist: '#66b47e, #05823f', text: 'Add to cart' }, 
+- 	{ slist: '#f5eea3, #f9d913', text: 'Bookmark', invert: 1 }
+- ], n = data.length;
+
+- for(var i = 0; i < n; i++)
+	button(style=`--slist: ${data[i].slist}`
+				 class=data[i].invert ? 'invert' : null
+				 data-icon=data[i].icon ? data[i].icon : null) #{data[i].text}

@@ -1,0 +1,117 @@
+@import 'compass/css3';
+
+$darksl: #3a3e40, #393d40;
+$dark-c: #293a42;
+$button-w: 10em;
+$button-h: .25*$button-w;
+$button-r: .125*$button-h;
+$icon-pad: .25*$button-h;
+$icon-arr: 29%;
+$rhomb-va: 120deg;
+$rhomb-sa: abs(90deg - $rhomb-va);
+$rhomb-sf: cos($rhomb-sa);
+$rhomb-ra: 90deg - .5*(90deg - $rhomb-sa);
+
+@function out-sh($ry: 1, $rb: .5) {
+	@return 0 calc(#{$ry*$button-r} - var(--dy)) 
+		$rb*$button-h calc(.5*var(--dy) - #{3*$button-r}) #000
+}
+
+html {
+	@media (max-width: 750px) and (min-width: 400px) { font-size: 2vw }
+	
+	@media (max-width: 400px) { font-size: 4vw }
+}
+
+body {
+	display: grid;
+	place-items: center;
+	grid: repeat(4, 1fr) / repeat(2, 1fr);
+	grid-auto-flow: column;
+	grid-gap: .25rem;
+	margin: 0;
+	min-height: 100vh;
+	background: radial-gradient(#717171, #373737) 50% 0/ 100% 100vh fixed;
+	text-align: center;
+	
+	@media (min-width: 1550px) and (min-aspect-ratio: 2/1) {
+		grid: repeat(2, 1fr) / repeat(4, 1fr);
+		grid-auto-flow: row
+	}
+	
+	@media (max-width: 400px) {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-around;
+		min-width: 135px
+	}
+}
+
+button {
+	overflow: hidden;
+	margin: 1em auto;
+	border: none;
+	padding: 0;
+	width: $button-w; height: $button-h;
+	border-radius: $button-r;
+	--dy: 0px;
+	transform: translatey(var(--dy));
+	--in-sh: inset 0 #{-.5*$button-r} 1px #{rgba(#000, .25)};
+	box-shadow: var(--in-sh), out-sh($rb: .75), out-sh(2), out-sh(3);
+	background: Linear-gradient(var(--slist));
+	font: 2em/ #{$button-h} abel, trebuchet ms, verdana, arial, sans-serif;
+	color: #fff;
+	text-transform: uppercase;
+	filter: grayscale(.85) contrast(.85);
+	transition: .3s;
+	cursor: pointer;
+	
+	&:focus, &:hover {
+		outline: none;
+		filter: none
+	}
+	
+	&:active { --dy: #{$button-r} }
+	
+	&[data-icon] {
+		width: $button-w + 2*$icon-pad;
+		border-radius: .5*$button-r;
+		
+		&:before {
+			float: left;
+			width: $button-h;
+			box-shadow: var(--in-sh);
+			background: linear-gradient($darksl);
+			content: attr(data-icon);
+			
+			/* don't add padding arrow is clipped from
+			 * if clip-path not supported (cough, Edge, cough) */
+			@supports (clip-path: circle(5px)) {
+				padding-right: $icon-pad;
+				clip-path: polygon(0 0, $button-h 0, $button-h $icon-arr, 100% 50%, $button-h calc(100% - #{$icon-arr}), $button-h 100%, 0 100%);
+			}
+		}
+	}
+	
+	&:not([data-icon]) {
+		position: relative;
+		
+		&:before, &:after {
+			position: absolute;
+			top: 50%; left: calc(var(--i, 0)*100%);
+			padding: $button-r;
+			width: $button-h; height: $button-h;
+			border-radius: 1.5*$button-r;
+			transform: translate(-50%, -50%) 
+				rotate($rhomb-ra) skewx($rhomb-sa) scaley($rhomb-sf);
+			box-shadow: 0 0 0 $button-r currentcolor;
+			background: currentcolor content-box;
+			color: $dark-c;
+			content: ''
+		}
+		
+		&:after { --i: 1 }
+	}
+}
+
+.invert { color: #000 }
